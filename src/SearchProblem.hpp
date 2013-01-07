@@ -4,7 +4,6 @@
 #include <list>
 #include <algorithm>
 #include <iterator>
-#include <iostream>
 
 template <class StateType, class ActionType>
 class Path
