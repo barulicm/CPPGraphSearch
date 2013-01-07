@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 
-#include "SearchProblem.hpp"
-#include "GraphSearch.hpp"
+#include "../src/SearchProblem.hpp"
+#include "../src/GraphSearch.hpp"
 #include <set>
 
 class Location
