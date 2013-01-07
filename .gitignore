@@ -13,3 +13,9 @@
 *.a
 
 *.zip
+bin/*
+obj/*
+
+*.cbp
+*.depend
+*.layout
