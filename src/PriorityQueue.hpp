@@ -1,0 +1,9 @@
+#ifndef PRIORITYQUEUE_HPP_INCLUDED
+#define PRIORITYQUEUE_HPP_INCLUDED
+
+class PriorityQueue
+{
+
+}
+
+#endif // PRIORITYQUEUE_HPP_INCLUDED
