@@ -85,8 +85,8 @@ public:
     virtual std::list<ActionType> getActions(StateType state) = 0;
     virtual StateType getResult(StateType state, ActionType action) = 0;
     virtual bool isGoal(StateType tate) = 0;
-    virtual double getStepCost(StateType state, ActionType action) = 0;
-    virtual double getHeuristicCost(StateType state) = 0;
+    virtual double getStepCost(StateType state, ActionType action) { return 1; }
+    virtual double getHeuristicCost(StateType state) { return 0; }
     double getPathCost(Path<StateType, ActionType>* path)
     {
         double cost = 0;

@@ -104,7 +104,7 @@ public:
 
     /** Runs Breadth-First graph on the given search problem */
     template <class StateType, class ActionType>
-    static Path<StateType, ActionType> BFS(SearchProblem<St"SearchProblem.hpp"ateType, ActionType> &problem)
+    static Path<StateType, ActionType> BFS(SearchProblem<StateType, ActionType> &problem)
     {
         set<StateType> expanded;
         queue< Path<StateType, ActionType> > frontier;
