@@ -26,18 +26,14 @@ public:
     }
     bool operator < (const Location &other) const
     {
-//        std::cout << "( (" << x << "," << y << ") < (" << other.x << "," << other.y << ") )";
         if(x < other.x)
         {
-//            cout << "\tTrue" << endl;
             return true;
         }
         else if(y < other.y)
         {
-//            cout << "\tTrue" << endl;
             return true;
         }
-//        cout << "\tFalse" << endl;
         return false;
     }
 };
@@ -190,21 +186,21 @@ int main()
         cout << endl;
     }
 
-//    list<Location>* locations = path.getStates();
-//    for(list<Location>::iterator it = locations->begin(); it != locations->end(); it++)
-//    {
-//        Location loc = *it;
-//        cout << loc << ", ";
-//    }
-//    cout << endl << endl;
-//
-//    list<Move>* moves = path.getActions();
-//    for(list<Move>::iterator it = moves->begin(); it != moves->end(); it++)
-//    {
-//        Move m = *it;
-//        cout << m << ", ";
-//    }
-//    cout << endl;
+    list<Location>* locations = path.getStates();
+    for(list<Location>::iterator it = locations->begin(); it != locations->end(); it++)
+    {
+        Location loc = *it;
+        cout << loc << ", ";
+    }
+    cout << endl << endl;
+
+    list<Move>* moves = path.getActions();
+    for(list<Move>::iterator it = moves->begin(); it != moves->end(); it++)
+    {
+        Move m = *it;
+        cout << m << ", ";
+    }
+    cout << endl;
 
     return 0;
 }
