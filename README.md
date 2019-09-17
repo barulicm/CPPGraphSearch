@@ -32,4 +32,19 @@ Optionally, to generate HTML documentation in the build directory:
 cmake --build . --target doxygen
 ```
 
+## Usage in a CMake Project
 
+Once installed, the easiest way to use this library is from within a CMake 
+project. 
+
+Simply find the package `GraphSearch` ...
+
+```cmake
+find_package(GraphSearch)
+```
+
+... and link to the imported target `GraphSearch::GraphSearch`.
+
+```cmake
+target_link_libraries(<target_name> GraphSearch::GraphSearch)
+``` 
