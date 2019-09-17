@@ -1,12 +1,9 @@
-CPPGraphSearch
+GraphSearch
 ==============
-
-Matthew Barulic
-2013
 
 A C++ implementation of common graph/tree search algorithms. Currently includes: DFS, BFS, and A*
 
-You can see full documentation at https://github.io/barulicm/CPPGraphSearch.
+You can see full documentation at http://barulicm.github.io/CPPGraphSearch.
 
 ## Installation
 
