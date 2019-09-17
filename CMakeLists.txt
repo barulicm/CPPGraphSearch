@@ -11,7 +11,6 @@ include(GNUInstallDirs)
 add_subdirectory(externals/Catch2)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/externals/Catch2/contrib")
 
-include(CTest)
 include(Catch)
 
 find_package(Doxygen OPTIONAL_COMPONENTS dot mscgen dia)
