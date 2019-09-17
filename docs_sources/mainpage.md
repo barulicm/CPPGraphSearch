@@ -5,6 +5,8 @@ The %GraphSearch library provides implementations of common graph search
 algorithms. You can use it to solve just about any problem that can be framed
 as a graph search problem.
 
+The source code and installation instructions can be found on [GitHub](https://github.com/barulicm/CPPGraphSearch).
+
 ## Implemented Algorithms
 
 The following algorithms are currently implemented in this library.
