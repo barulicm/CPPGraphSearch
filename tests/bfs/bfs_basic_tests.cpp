@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 #include <graphsearch/GraphSearch.hpp>
 
-TEST_CASE( "DFS Anything is the goal", "[dfs]" ) {
+TEST_CASE( "BFS Anything is the goal", "[bfs]" ) {
   using StateType = int;
   using ActionType = int;
   StateType startState = 0;
@@ -9,12 +9,12 @@ TEST_CASE( "DFS Anything is the goal", "[dfs]" ) {
   auto allowedActionsFunction = [](const StateType&)->std::vector<StateType> { return {}; };
   auto transitionFunction = [](const StateType&,const ActionType&)->StateType { return 0; };
 
-  auto result = GraphSearch::DFS<StateType,ActionType>(startState, goalFunction, allowedActionsFunction, transitionFunction);
+  auto result = GraphSearch::BFS<StateType,ActionType>(startState, goalFunction, allowedActionsFunction, transitionFunction);
 
   REQUIRE(result);
 }
 
-TEST_CASE( "DFS Unsolvable because no allowed actions", "[dfs]" ) {
+TEST_CASE( "BFS Unsolvable because no allowed actions", "[bfs]" ) {
   using StateType = int;
   using ActionType = int;
   StateType startState = 0;
@@ -22,12 +22,12 @@ TEST_CASE( "DFS Unsolvable because no allowed actions", "[dfs]" ) {
   auto allowedActionsFunction = [](const StateType&)->std::vector<StateType> { return {}; };
   auto transitionFunction = [](const StateType&,const ActionType&)->StateType { return 0; };
 
-  auto result = GraphSearch::DFS<StateType,ActionType>(startState, goalFunction, allowedActionsFunction, transitionFunction);
+  auto result = GraphSearch::BFS<StateType,ActionType>(startState, goalFunction, allowedActionsFunction, transitionFunction);
 
   REQUIRE_FALSE(result);
 }
 
-TEST_CASE( "DFS Find the number 3", "[dfs]" ) {
+TEST_CASE( "BFS Find the number 3", "[bfs]" ) {
   using StateType = int;
   using ActionType = int;
   StateType startState = 0;
@@ -41,7 +41,7 @@ TEST_CASE( "DFS Find the number 3", "[dfs]" ) {
   };
   auto transitionFunction = [](const StateType& x,const ActionType& a)->StateType { return x + a; };
 
-  auto result = GraphSearch::DFS<StateType,ActionType>(startState, goalFunction, allowedActionsFunction, transitionFunction);
+  auto result = GraphSearch::BFS<StateType,ActionType>(startState, goalFunction, allowedActionsFunction, transitionFunction);
 
   REQUIRE(result);
   REQUIRE(result->getLastState() == 3);
