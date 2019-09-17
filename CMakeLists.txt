@@ -40,8 +40,8 @@ catch_discover_tests(${PROJECT_NAME}_Tests)
 #
 # Examples
 #
-add_executable(astar_11x11grid examples/astar_11x11grid/main.cpp)
-target_link_libraries(astar_11x11grid ${PROJECT_NAME})
+add_executable(11x11grid examples/11x11grid/main.cpp)
+target_link_libraries(11x11grid ${PROJECT_NAME})
 
 #
 # Installation directives

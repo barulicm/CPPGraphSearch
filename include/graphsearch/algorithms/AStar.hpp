@@ -58,9 +58,11 @@ AStar(StateType &startState, std::function<bool(const StateType &)> isGoal,
 
       for(auto &action : allowedActions) {
         auto nextState = getNextState(lastState, action);
-        Path<StateType, ActionType> newPath(path);
-        newPath.push_back(action, nextState);
-        frontier.push({newPath, getPathCost(newPath)});
+        if(expanded.find(nextState) == expanded.end()) {
+          Path<StateType, ActionType> newPath(path);
+          newPath.push_back(action, nextState);
+          frontier.push({newPath, getPathCost(newPath)});
+        }
       }
     }
   }
