@@ -1,5 +1,6 @@
 #include <catch2/catch.hpp>
 #include <graphsearch/GraphSearch.hpp>
+#include "../Map2d.h"
 
 TEST_CASE( "DFS Anything is the goal", "[dfs]" ) {
   using StateType = int;
@@ -46,4 +47,50 @@ TEST_CASE( "DFS Find the number 3", "[dfs]" ) {
   REQUIRE(result);
   REQUIRE(result->last_state() == 3);
   REQUIRE(std::accumulate(result->actions().begin(), result->actions().end(), 0) == 3);
+}
+
+TEST_CASE( "DFS empty 2D map", "[dfs]") {
+  Map2d map{5,5};
+  Location2d startState{0,0};
+  Location2d goalState{4,4};
+  auto goalFunction = [goalState](const Location2d &s){ return s == goalState; };
+  auto allowedActionsFunction = [map](const Location2d &location){ return map.getAllowedActions(location); };
+
+  auto result = GraphSearch::DFS<Location2d, Move2d>(startState, goalFunction, allowedActionsFunction, transitionFunction2d);
+
+  REQUIRE(result);
+  REQUIRE(result->last_state() == goalState);
+}
+
+TEST_CASE( "DFS unsolvable 2D map", "[dfs]") {
+  Map2d map{5,5};
+  map.setCell({0,1}, Map2d::BLOCKED);
+  map.setCell({1,0}, Map2d::BLOCKED);
+  map.setCell({1,1}, Map2d::BLOCKED);
+  Location2d startState{0,0};
+  Location2d goalState{4,4};
+  auto goalFunction = [goalState](const Location2d &s){ return s == goalState; };
+  auto allowedActionsFunction = [map](const Location2d &location){ return map.getAllowedActions(location); };
+
+  auto result = GraphSearch::DFS<Location2d, Move2d>(startState, goalFunction, allowedActionsFunction, transitionFunction2d);
+
+  REQUIRE_FALSE(result);
+}
+
+TEST_CASE( "DFS hole in the wall 2D map", "[dfs]") {
+  Map2d map{5,5};
+  map.setCells({0, 0, 1, 0, 0,
+                0, 0, 1, 0, 0,
+                0, 0, 0, 0, 0,
+                0, 0, 1, 0, 0,
+                0, 0, 1, 0, 0});
+  Location2d startState{0,0};
+  Location2d goalState{4,4};
+  auto goalFunction = [goalState](const Location2d &s){ return s == goalState; };
+  auto allowedActionsFunction = [map](const Location2d &location){ return map.getAllowedActions(location); };
+
+  auto result = GraphSearch::DFS<Location2d, Move2d>(startState, goalFunction, allowedActionsFunction, transitionFunction2d);
+
+  REQUIRE(result);
+  REQUIRE(result->last_state() == goalState);
 }
