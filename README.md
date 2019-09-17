@@ -1,7 +1,7 @@
 GraphSearch
 ==============
 
-A C++ implementation of common graph/tree search algorithms. Currently includes: DFS, BFS, and A*
+A C++ implementation of common graph/tree search algorithms.
 
 You can see full documentation at http://barulicm.github.io/CPPGraphSearch.
 
