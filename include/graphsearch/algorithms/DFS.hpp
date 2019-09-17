@@ -10,10 +10,19 @@
 
 namespace GraphSearch {
 
-/** Runs Depth-First graph search on the given search problem */
+/**
+ * @brief Runs Depth-First Search on the problem described by the function arguments
+ * @tparam StateType A type for representing states in your search problem
+ * @tparam ActionType A type for representing actions in your search problem
+ * @param startState The state from which the search should start
+ * @param isGoal A function which determines whether the given state meets the goal criteria for the search
+ * @param getAllowedActions A function which gives the set of allowed actions for a given state
+ * @param getNextState A function which gives the state resulting from taking the given action from the given state
+ * @return An optional Path that connects the starts state to a goal state. An empty optional will be returned if no path is possible.
+ */
 template<class StateType, class ActionType>
 std::optional<Path<StateType, ActionType>>
-DFS(StateType &startState, std::function<bool(const StateType &)> isGoal,
+DFS(const StateType &startState, std::function<bool(const StateType &)> isGoal,
     std::function<std::vector<ActionType>(const StateType &)> getAllowedActions,
     std::function<StateType(const StateType &,
                             const ActionType &)> getNextState) {

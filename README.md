@@ -6,6 +6,8 @@ Matthew Barulic
 
 A C++ implementation of common graph/tree search algorithms. Currently includes: DFS, BFS, and A*
 
+You can see full documentation at https://github.io/barulicm/CPPGraphSearch.
+
 ## Installation
 
 ```bash
@@ -27,7 +29,7 @@ Optionally, to build the included examples:
 cmake --build . --target examples
 ```
 
-Optionally, to generate HTML documentation in the source directory:
+Optionally, to generate HTML documentation in the build directory:
 
 ```bash
 cmake --build . --target doxygen

@@ -59,10 +59,11 @@ add_custom_target(examples DEPENDS
 # Documentation targets
 #
 if(DOXYGEN_FOUND)
-  set(DOXYGEN_OUTPUT_DIRECTORY ${${PROJECT_NAME}_SOURCE_DIR}/docs)
+  set(DOXYGEN_OUTPUT_DIRECTORY docs)
   set(DOXYGEN_EXTRACT_ALL "YES")
+  set(DOXYGEN_STRIP_FROM_INC_PATH include)
   doxygen_add_docs(doxygen
-    ${${PROJECT_NAME}_SOURCE_DIR}/include
+    ${${PROJECT_NAME}_SOURCE_DIR}/include ${${PROJECT_NAME}_SOURCE_DIR}/docs
     COMMENT "Generate documentation")
   set_target_properties(doxygen PROPERTIES EXCLUDE_FROM_ALL TRUE)
 

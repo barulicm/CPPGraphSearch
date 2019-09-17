@@ -22,4 +22,3 @@ obj/*
 
 .idea/
 cmake-build-*/
-docs/
