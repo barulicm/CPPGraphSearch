@@ -24,7 +24,7 @@ void print_map(const int map[11][11], const Location &start, const Location &goa
   std::cout << std::endl;
 }
 
-void print_map_and_path(const int map[11][11], const Path<Location, Move> &path) {
+void print_map_and_path(const int map[11][11], const GraphSearch::Path<Location, Move> &path) {
   char pathMap[11][11];
   for(int x = 0; x < 11; x++)
     for(int y = 0; y < 11; y++)

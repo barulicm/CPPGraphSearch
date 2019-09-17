@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.12)
-project("GraphSearch" VERSION 2.0
-  DESCRIPTION "A header only C++ library that provides implementations of common graph search algorithms."
-  HOMEPAGE_URL "https://github.com/barulicm/CPPGraphSearch")
+cmake_minimum_required(VERSION 3.10)
+project("GraphSearch"
+  VERSION 2.0
+  LANGUAGES CXX
+  DESCRIPTION "A header only C++ library that provides implementations of common graph search algorithms.")
 
 enable_testing()
 
@@ -12,6 +13,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/externals/Catch2/contrib")
 
 include(CTest)
 include(Catch)
+
+find_package(Doxygen OPTIONAL_COMPONENTS dot mscgen dia)
 
 #
 # Library definition
@@ -36,12 +39,34 @@ add_executable(${PROJECT_NAME}_Tests
   tests/astar/astar_basic_tests.cpp)
 target_link_libraries(${PROJECT_NAME}_Tests ${PROJECT_NAME} Catch2::Catch2)
 catch_discover_tests(${PROJECT_NAME}_Tests)
+set_target_properties(${PROJECT_NAME}_Tests PROPERTIES EXCLUDE_FROM_ALL TRUE)
+
+add_custom_target(run_tests
+  COMMAND ${PROJECT_NAME}_Tests
+  DEPENDS ${PROJECT_NAME}_Tests)
 
 #
 # Examples
 #
-add_executable(11x11grid examples/11x11grid/main.cpp)
-target_link_libraries(11x11grid ${PROJECT_NAME})
+add_executable(example_11x11grid examples/11x11grid/main.cpp)
+target_link_libraries(example_11x11grid ${PROJECT_NAME})
+set_target_properties(example_11x11grid PROPERTIES EXCLUDE_FROM_ALL TRUE)
+
+add_custom_target(examples DEPENDS
+  example_11x11grid)
+
+#
+# Documentation targets
+#
+if(DOXYGEN_FOUND)
+  set(DOXYGEN_OUTPUT_DIRECTORY ${${PROJECT_NAME}_SOURCE_DIR}/docs)
+  set(DOXYGEN_EXTRACT_ALL "YES")
+  doxygen_add_docs(doxygen
+    ${${PROJECT_NAME}_SOURCE_DIR}/include
+    COMMENT "Generate documentation")
+  set_target_properties(doxygen PROPERTIES EXCLUDE_FROM_ALL TRUE)
+
+endif()
 
 #
 # Installation directives
@@ -75,4 +100,4 @@ install(FILES
   "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake)
 
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/GraphSearch DESTINATION include)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/graphsearch DESTINATION include)
