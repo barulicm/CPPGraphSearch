@@ -19,3 +19,6 @@ obj/*
 *.cbp
 *.depend
 *.layout
+
+.idea/
+cmake-build-*/
