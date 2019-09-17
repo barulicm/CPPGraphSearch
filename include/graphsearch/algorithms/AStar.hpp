@@ -28,10 +28,10 @@ AStar(StateType &startState, std::function<bool(const StateType &)> isGoal,
 
   auto getPathCost = [getStepCost, getHeuristic](Path<StateType,ActionType> &path) {
     double cost = 0;
-    for(int i = 0; i < path.getNumberOfSteps(); i++) {
-      cost += getStepCost(path.getState(i), path.getAction(i));
+    for(int i = 0; i < path.actions().size(); i++) {
+      cost += getStepCost(path.states()[i], path.actions()[i]);
     }
-    cost += getHeuristic(path.getLastState());
+    cost += getHeuristic(path.last_state());
     return cost;
   };
 
@@ -46,7 +46,7 @@ AStar(StateType &startState, std::function<bool(const StateType &)> isGoal,
     auto [path, cost] = frontier.top();
     frontier.pop();
 
-    auto lastState = path.getLastState();
+    auto lastState = path.last_state();
 
     if (expanded.find(lastState) == expanded.end()) {
       expanded.insert(lastState);
@@ -59,8 +59,7 @@ AStar(StateType &startState, std::function<bool(const StateType &)> isGoal,
       for(auto &action : allowedActions) {
         auto nextState = getNextState(lastState, action);
         Path<StateType, ActionType> newPath(path);
-        newPath.addAction(action);
-        newPath.addState(nextState);
+        newPath.push_back(action, nextState);
         frontier.push({newPath, getPathCost(newPath)});
       }
     }

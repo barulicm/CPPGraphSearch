@@ -16,7 +16,7 @@ public:
         x = _x;
         y = _y;
     }
-    friend ostream &operator<< (ostream &stream, Location &loc)
+    friend ostream &operator<< (ostream &stream, const Location &loc)
     {
         stream << "(" << loc.x << "," << loc.y << ")";
         return stream;
@@ -48,7 +48,7 @@ public:
     {
         dir = d;
     }
-    friend ostream &operator<< (ostream &stream, Move &move)
+    friend ostream &operator<< (ostream &stream, const Move &move)
     {
         stream << move.dir;
         return stream;
@@ -157,21 +157,21 @@ int main()
     return 0;
   }
 
-  cout << "Found path of length " << path->getNumberOfSteps() << ":" << endl;
+  cout << "Found path with " << path->actions().size() << " actions." << endl;
 
   char pathMap[11][11];
   for(int x = 0; x < 11; x++)
       for(int y = 0; y < 11; y++)
           pathMap[x][y] = map[x][y] + 48;
 
-  for(int i = 0; i < path->getNumberOfSteps(); i++)
+  for(int i = 0; i < path->actions().size(); i++)
   {
-      Location loc = path->getState(i);
-      Move m = path->getAction(i);
+      Location loc = path->states()[i];
+      Move m = path->actions()[i];
       pathMap[loc.x][loc.y] = m.dir[0];
   }
 
-  Location dest = path->getLastState();
+  Location dest = path->last_state();
   pathMap[dest.x][dest.y] = '*';
 
   for(int x = 0; x < 11; x++)
@@ -183,13 +183,13 @@ int main()
       cout << endl;
   }
 
-  for(auto &loc : *(path->getStates()))
+  for(auto &loc : path->states())
   {
       cout << loc << ", ";
   }
   cout << endl << endl;
 
-  for(auto &m : *(path->getActions()))
+  for(auto &m : path->actions())
   {
       cout << m << ", ";
   }

@@ -44,6 +44,6 @@ TEST_CASE( "DFS Find the number 3", "[dfs]" ) {
   auto result = GraphSearch::DFS<StateType,ActionType>(startState, goalFunction, allowedActionsFunction, transitionFunction);
 
   REQUIRE(result);
-  REQUIRE(result->getLastState() == 3);
-  REQUIRE(std::accumulate(result->getActions()->begin(), result->getActions()->end(), 0) == 3);
+  REQUIRE(result->last_state() == 3);
+  REQUIRE(std::accumulate(result->actions().begin(), result->actions().end(), 0) == 3);
 }

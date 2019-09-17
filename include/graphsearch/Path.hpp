@@ -6,76 +6,47 @@ class Path {
 public:
   Path() = default;
 
-  Path(const Path<StateType, ActionType> &p) {
-    states = std::vector<StateType>(p.states);
-    actions = std::vector<ActionType>(p.actions);
+  Path(const Path<StateType, ActionType> &p)
+    : states_(p.states_),
+      actions_(p.actions_)
+  {
   }
 
   Path(std::vector<StateType> &&states, std::vector<ActionType> &&actions)
-    : states(states), actions(actions) {
+    : states_(states), actions_(actions) {
 
   }
 
-  void addState(StateType state) {
-    states.push_back(state);
+  void push_back(StateType state) {
+    if(!states_.empty()) {
+      throw std::invalid_argument("When a path is not empty, you must push both a state and the action to get to that state.");
+    }
+    states_.push_back(state);
   }
 
-  void addAction(ActionType action) {
-    actions.push_back(action);
+  void push_back(ActionType action, StateType state) {
+    if(states_.empty()) {
+      throw std::invalid_argument("When a path is empty, you must push a starting state without an action.");
+    }
+    states_.push_back(state);
+    actions_.push_back(action);
   }
 
-  void setState(StateType state, int index) {
-    if (index < 0 || index >= states.size())
-      throw "Index out of bounds!";
-    states[index] = state;
+  const std::vector<StateType> &states() const {
+    return states_;
   }
 
-  void setAction(ActionType action, int index) {
-    if (index < 0 || index >= actions.size())
-      throw "Index out of bounds!";
-    actions[index] = action;
+  const std::vector<ActionType> &actions() const {
+    return actions_;
   }
 
-  StateType getState(unsigned int index) {
-    if (index < 0 || index >= states.size())
-      throw "Index out of bounds!";
-
-    typename std::vector<StateType>::iterator iter = states.begin();
-    std::advance(iter, index);
-    return *iter;
-  }
-
-  ActionType getAction(unsigned int index) {
-    if (index < 0 || index >= actions.size())
-      throw "Index out of bounds!";
-    typename std::vector<ActionType>::iterator iter = actions.begin();
-    std::advance(iter, index);
-    return *iter;
-  }
-
-  std::vector <StateType> *getStates() {
-    return &states;
-  }
-
-  std::vector <ActionType> *getActions() {
-    return &actions;
-  }
-
-  StateType getLastState() {
-    return states.back();
-  }
-
-  int getNumberOfSteps() const {
-    return actions.size();
-  }
-
-  bool containsState(StateType state) {
-    return (find(states.begin(), states.end(), state) != states.end());
+  const StateType &last_state() const {
+    return states_.back();
   }
 
 private:
-  std::vector <StateType> states;
-  std::vector <ActionType> actions;
+  std::vector <StateType> states_;
+  std::vector <ActionType> actions_;
 };
 
 #endif //CPPGRAPHSEARCH_PATH_HPP

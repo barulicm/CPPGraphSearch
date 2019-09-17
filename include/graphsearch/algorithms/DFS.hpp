@@ -27,7 +27,7 @@ DFS(StateType &startState, std::function<bool(const StateType &)> isGoal,
     auto path = frontier.top();
     frontier.pop();
 
-    auto lastState = path.getLastState();
+    auto lastState = path.last_state();
 
     if (expanded.find(lastState) == expanded.end()) {
       expanded.insert(lastState);
@@ -41,8 +41,7 @@ DFS(StateType &startState, std::function<bool(const StateType &)> isGoal,
       for (auto &action : allowedActions) {
         auto nextState = getNextState(lastState, action);
         Path<StateType, ActionType> newPath(path);
-        newPath.addAction(action);
-        newPath.addState(nextState);
+        newPath.push_back(action, nextState);
         frontier.push(newPath);
       }
     }

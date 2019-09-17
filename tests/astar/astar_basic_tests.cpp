@@ -50,6 +50,6 @@ TEST_CASE( "AStar Find the number 3", "[bfs]" ) {
   auto result = GraphSearch::AStar<StateType,ActionType>(startState, goalFunction, allowedActionsFunction, transitionFunction, stepCostFunction, heuristicFunction);
 
   REQUIRE(result);
-  REQUIRE(result->getLastState() == 3);
-  REQUIRE(std::accumulate(result->getActions()->begin(), result->getActions()->end(), 0) == 3);
+  REQUIRE(result->last_state() == 3);
+  REQUIRE(std::accumulate(result->actions().begin(), result->actions().end(), 0) == 3);
 }
