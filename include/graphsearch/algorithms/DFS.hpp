@@ -4,6 +4,7 @@
 #include <set>
 #include <stack>
 #include <optional>
+#include <functional>
 
 #include "graphsearch/Path.hpp"
 

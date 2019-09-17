@@ -1,15 +1,16 @@
 #include <iostream>
 #include <string>
-
-#include "../src/SearchProblem.hpp"
-#include "../src/GraphSearch.hpp"
 #include <set>
+
+#include <graphsearch/GraphSearch.hpp>
+
+using namespace std;
 
 class Location
 {
 public:
     int x, y;
-    Location(){ }
+    Location() = default;
     Location(int _x, int _y)
     {
         x = _x;
@@ -20,7 +21,7 @@ public:
         stream << "(" << loc.x << "," << loc.y << ")";
         return stream;
     }
-    bool operator == (const Location &other)
+    bool operator == (const Location &other) const
     {
         return (x == other.x) && (y == other.y);
     }
@@ -42,7 +43,7 @@ class Move
 {
 public:
     string dir;
-    Move(){ }
+    Move() = default;
     Move(string d)
     {
         dir = d;
@@ -58,149 +59,141 @@ public:
     }
 };
 
-class Problem : public SearchProblem<Location, Move>
-{
-public:
-    int map[11][11];
-    Location getStartState()
-    {
-        Location loc;
-        loc.x = 0;
-        loc.y = 0;
-        return loc;
-    }
-    std::list<Move> getActions(Location state)
-    {
-        std::list<Move> acts;
-        if(state.y < 10 && map[state.x][state.y+1] != 1)
-            acts.push_back(Move("E"));
-        if(state.y > 0 && map[state.x][state.y-1] != 1)
-            acts.push_back(Move("W"));
-        if(state.x < 10 && map[state.x+1][state.y] != 1)
-            acts.push_back(Move("S"));
-        if(state.x > 0 && map[state.x-1][state.y] != 1)
-            acts.push_back(Move("N"));
-        return acts;
-    }
-    Location getResult(Location state, Move action)
-    {
-        if(action.dir == "E")
-        {
-            return Location(state.x, state.y+1);
-        }
-        else if (action.dir == "W")
-        {
-            return Location(state.x, state.y-1);
-        }
-        else if (action.dir == "S")
-        {
-            return Location(state.x+1, state.y);
-        }
-        else if (action.dir == "N")
-        {
-            return Location(state.x-1, state.y);
-        }
-        else
-        {
-            return state;
-        }
-    }
-    bool isGoal(Location state)
-    {
-        //Destination is (5,5)
-        return (state.x == 5) && (state.y == 5);
-    }
-    double getStepCost(Location state, Move action)
-    {
-        //All actions move one unit
-        return 1;
-    }
-    double getHeuristicCost(Location state)
-    {
-        //Manhatten distance
-        return abs(state.x - 5) + abs(state.y - 5);
-    }
-};
-
 int main()
 {
-    Problem problem;
 
-    for(int x = 0; x < 11; x++)
-        for(int y = 0; y < 11; y++)
-            problem.map[x][y] = 0;
-    problem.map[0][1] = 1;
-    problem.map[1][1] = 1;
-    problem.map[2][1] = 1;
-    problem.map[3][1] = 1;
-    problem.map[4][1] = 1;
-    problem.map[5][1] = 1;
-    problem.map[6][1] = 1;
+  Location startLoc{0,0};
+  Location goalLoc{5,5};
 
-    for(int x = 0; x < 11; x++)
+  int map[11][11];
+  for(int x = 0; x < 11; x++)
+      for(int y = 0; y < 11; y++)
+          map[x][y] = 0;
+  map[0][1] = 1;
+  map[1][1] = 1;
+  map[2][1] = 1;
+  map[3][1] = 1;
+  map[4][1] = 1;
+  map[5][1] = 1;
+  map[6][1] = 1;
+
+  auto goalFunction = [goalLoc](const Location& x) { return x == goalLoc; };
+
+  auto getActions = [map](Location state)
+  {
+    std::vector<Move> acts;
+    if(state.y < 10 && map[state.x][state.y+1] != 1)
+      acts.emplace_back("E");
+    if(state.y > 0 && map[state.x][state.y-1] != 1)
+      acts.emplace_back("W");
+    if(state.x < 10 && map[state.x+1][state.y] != 1)
+      acts.emplace_back("S");
+    if(state.x > 0 && map[state.x-1][state.y] != 1)
+      acts.emplace_back("N");
+    return acts;
+  };
+
+  auto getResult = [](Location state, Move action)
+  {
+    if(action.dir == "E")
     {
-        for(int y = 0; y < 11; y++)
-        {
-            if(x == 0 && y == 0)
-            {
-                cout << "S" << " ";
-            }
-            else if(x == 5 && y == 5)
-            {
-                cout << "*" << " ";
-            }
-            else
-            {
-                cout << problem.map[x][y] << " ";
-            }
-        }
-        cout << endl;
+      return Location(state.x, state.y+1);
     }
-    cout << endl;
-
-    Path<Location, Move> path = GraphSearch::AStar(problem);
-
-    cout << "Found path of length " << path.getNumberOfSteps() << ":" << endl;
-
-    char pathMap[11][11];
-    for(int x = 0; x < 11; x++)
-        for(int y = 0; y < 11; y++)
-            pathMap[x][y] = problem.map[x][y] + 48;
-
-    for(int i = 0; i < path.getNumberOfSteps(); i++)
+    else if (action.dir == "W")
     {
-        Location loc = path.getState(i);
-        Move m = path.getAction(i);
-        pathMap[loc.x][loc.y] = m.dir[0];
+      return Location(state.x, state.y-1);
     }
-
-    Location dest = path.getLastState();
-    pathMap[dest.x][dest.y] = '*';
-
-    for(int x = 0; x < 11; x++)
+    else if (action.dir == "S")
     {
-        for(int y = 0; y < 11; y++)
-        {
-            cout << pathMap[x][y] << " ";
-        }
-        cout << endl;
+      return Location(state.x+1, state.y);
     }
-
-    list<Location>* locations = path.getStates();
-    for(list<Location>::iterator it = locations->begin(); it != locations->end(); it++)
+    else if (action.dir == "N")
     {
-        Location loc = *it;
-        cout << loc << ", ";
+      return Location(state.x-1, state.y);
     }
-    cout << endl << endl;
-
-    list<Move>* moves = path.getActions();
-    for(list<Move>::iterator it = moves->begin(); it != moves->end(); it++)
+    else
     {
-        Move m = *it;
-        cout << m << ", ";
+      return state;
     }
-    cout << endl;
+  };
 
+  auto getStepCost = [](const Location &state, const Move &action)
+  {
+    //All actions move one unit
+    return 1;
+  };
+
+  auto getHeuristicCost = [](const Location &state)
+  {
+    //Manhatten distance
+    return abs(state.x - 5) + abs(state.y - 5);
+  };
+
+  for(int x = 0; x < 11; x++)
+  {
+      for(int y = 0; y < 11; y++)
+      {
+          if(x == 0 && y == 0)
+          {
+              cout << "S" << " ";
+          }
+          else if(x == 5 && y == 5)
+          {
+              cout << "*" << " ";
+          }
+          else
+          {
+              cout << map[x][y] << " ";
+          }
+      }
+      cout << endl;
+  }
+  cout << endl;
+
+  auto path = GraphSearch::AStar<Location, Move>(startLoc, goalFunction, getActions, getResult, getStepCost, getHeuristicCost);
+
+  if(!path) {
+    cout << "Could not find a path!" << endl;
     return 0;
+  }
+
+  cout << "Found path of length " << path->getNumberOfSteps() << ":" << endl;
+
+  char pathMap[11][11];
+  for(int x = 0; x < 11; x++)
+      for(int y = 0; y < 11; y++)
+          pathMap[x][y] = map[x][y] + 48;
+
+  for(int i = 0; i < path->getNumberOfSteps(); i++)
+  {
+      Location loc = path->getState(i);
+      Move m = path->getAction(i);
+      pathMap[loc.x][loc.y] = m.dir[0];
+  }
+
+  Location dest = path->getLastState();
+  pathMap[dest.x][dest.y] = '*';
+
+  for(int x = 0; x < 11; x++)
+  {
+      for(int y = 0; y < 11; y++)
+      {
+          cout << pathMap[x][y] << " ";
+      }
+      cout << endl;
+  }
+
+  for(auto &loc : *(path->getStates()))
+  {
+      cout << loc << ", ";
+  }
+  cout << endl << endl;
+
+  for(auto &m : *(path->getActions()))
+  {
+      cout << m << ", ";
+  }
+  cout << endl;
+
+  return 0;
 }

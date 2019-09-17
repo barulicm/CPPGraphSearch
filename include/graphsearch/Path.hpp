@@ -65,7 +65,7 @@ public:
     return states.back();
   }
 
-  int getNumberOfSteps() {
+  int getNumberOfSteps() const {
     return actions.size();
   }
 

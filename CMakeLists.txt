@@ -32,9 +32,16 @@ target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 add_executable(${PROJECT_NAME}_Tests
   tests/main.cpp
   tests/dfs/dfs_basic_tests.cpp
-  tests/bfs/bfs_basic_tests.cpp)
+  tests/bfs/bfs_basic_tests.cpp
+  tests/astar/astar_basic_tests.cpp)
 target_link_libraries(${PROJECT_NAME}_Tests ${PROJECT_NAME} Catch2::Catch2)
 catch_discover_tests(${PROJECT_NAME}_Tests)
+
+#
+# Examples
+#
+add_executable(astar_11x11grid examples/astar_11x11grid/main.cpp)
+target_link_libraries(astar_11x11grid ${PROJECT_NAME})
 
 #
 # Installation directives
