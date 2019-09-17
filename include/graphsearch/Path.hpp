@@ -1,6 +1,8 @@
 #ifndef CPPGRAPHSEARCH_PATH_HPP
 #define CPPGRAPHSEARCH_PATH_HPP
 
+#include <cassert>
+
 namespace GraphSearch {
 
 /**
@@ -31,10 +33,7 @@ public:
    * @param state The state to append
    */
   void push_back(StateType state) {
-    if (!states_.empty()) {
-      throw std::invalid_argument(
-          "When a path is not empty, you must push both a state and the action to get to that state.");
-    }
+    assert(states_.empty());
     states_.push_back(state);
   }
 
@@ -49,10 +48,7 @@ public:
    * @param state The state to append
    */
   void push_back(ActionType action, StateType state) {
-    if (states_.empty()) {
-      throw std::invalid_argument(
-          "When a path is empty, you must push a starting state without an action.");
-    }
+    assert(!states_.empty());
     states_.push_back(state);
     actions_.push_back(action);
   }
