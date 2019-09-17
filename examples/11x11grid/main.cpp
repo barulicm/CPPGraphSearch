@@ -3,134 +3,17 @@
 
 #include <graphsearch/GraphSearch.hpp>
 
-class Location
-{
-public:
-    int x, y;
-    Location() = default;
-    Location(int _x, int _y)
-    {
-        x = _x;
-        y = _y;
-    }
-    friend std::ostream &operator<< (std::ostream &stream, const Location &loc)
-    {
-        stream << "(" << loc.x << "," << loc.y << ")";
-        return stream;
-    }
-    bool operator == (const Location &other) const
-    {
-        return (x == other.x) && (y == other.y);
-    }
-    bool operator < (const Location &other) const
-    {
-        if(x < other.x)
-        {
-            return true;
-        }
-        else if(x == other.x && y < other.y)
-        {
-            return true;
-        }
-        return false;
-    }
-};
-
-class Move
-{
-public:
-  enum Direction {
-    NORTH,
-    EAST,
-    SOUTH,
-    WEST
-  } dir;
-
-  Move() = default;
-
-  explicit Move(Direction d) : dir(d) {}
-
-  friend std::ostream &operator<< (std::ostream &stream, const Move &move)
-  {
-      stream << move.to_string();
-      return stream;
-  }
-
-  bool operator == (const Move &other)
-  {
-      return (dir == other.dir);
-  }
-
-  std::string to_string() const {
-    switch(dir) {
-      case NORTH:
-        return "N";
-      case EAST:
-        return "E";
-      case SOUTH:
-        return "S";
-      case WEST:
-        return "W";
-    }
-  }
-};
-
-void print_map(const int map[11][11], const Location &start, const Location &goal) {
-  for(int x = 0; x < 11; x++)
-  {
-    for(int y = 0; y < 11; y++)
-    {
-      if(x == start.x && y == start.y)
-      {
-        std::cout << "S" << " ";
-      }
-      else if(x == goal.x && y == goal.y)
-      {
-        std::cout << "*" << " ";
-      }
-      else
-      {
-        std::cout << map[x][y] << " ";
-      }
-    }
-    std::cout << std::endl;
-  }
-  std::cout << std::endl;
-}
-
-void print_map_and_path(const int map[11][11], const Path<Location, Move> &path) {
-  char pathMap[11][11];
-  for(int x = 0; x < 11; x++)
-    for(int y = 0; y < 11; y++)
-      pathMap[x][y] = map[x][y] + 48;
-
-  for(int i = 0; i < path.actions().size(); i++)
-  {
-    Location loc = path.states()[i];
-    Move m = path.actions()[i];
-    pathMap[loc.x][loc.y] = m.to_string()[0];
-  }
-
-  Location dest = path.last_state();
-  pathMap[dest.x][dest.y] = '*';
-
-  for(int x = 0; x < 11; x++)
-  {
-    for(int y = 0; y < 11; y++)
-    {
-      std::cout << pathMap[x][y] << " ";
-    }
-    std::cout << std::endl;
-  }
-  std::cout << std::endl;
-}
+#include "Location.hpp"
+#include "Move.hpp"
+#include "PrintFunctions.hpp"
 
 int main()
 {
-
+  // Define starting and ending positions
   Location startLoc{0,0};
   Location goalLoc{5,5};
 
+  // Create a map to be navigated
   int map[11][11];
   for(int x = 0; x < 11; x++)
       for(int y = 0; y < 11; y++)
@@ -143,8 +26,10 @@ int main()
   map[5][1] = 1;
   map[6][1] = 1;
 
+  // Define a function to evaluate when the goal is reached
   auto goalFunction = [goalLoc](const Location& x) { return x == goalLoc; };
 
+  // Define a function to return allowed actions from any state
   auto getActions = [map](Location state)
   {
     std::vector<Move> acts;
@@ -159,7 +44,8 @@ int main()
     return acts;
   };
 
-  auto getResult = [](Location state, Move action)
+  // Define a function that returns the next state given the previous state and action
+  auto transitionFunction = [](Location state, Move action)
   {
     switch(action.dir) {
       case Move::EAST:
@@ -173,13 +59,15 @@ int main()
     }
   };
 
-  auto getStepCost = [](const Location &state, const Move &action)
+  // Define a function that gives the cost of an action
+  auto stepCostFunction = [](const Location &state, const Move &action)
   {
     //All actions move one unit
     return 1;
   };
 
-  auto getHeuristicCost = [](const Location &state)
+  // Define a function that gives a heuristic value for a given state
+  auto heuristicFunction = [](const Location &state)
   {
     //Manhatten distance
     return abs(state.x - 5) + abs(state.y - 5);
@@ -190,7 +78,7 @@ int main()
 
   {
     // A-Star
-    auto path = GraphSearch::AStar<Location, Move>(startLoc, goalFunction, getActions, getResult, getStepCost, getHeuristicCost);
+    auto path = GraphSearch::AStar<Location, Move>(startLoc, goalFunction, getActions, transitionFunction, stepCostFunction, heuristicFunction);
 
     if(path) {
       std::cout << "A* path:" << std::endl;
@@ -202,7 +90,7 @@ int main()
 
   {
     // BFS
-    auto path = GraphSearch::BFS<Location, Move>(startLoc, goalFunction, getActions, getResult);
+    auto path = GraphSearch::BFS<Location, Move>(startLoc, goalFunction, getActions, transitionFunction);
 
     if(path) {
       std::cout << "BFS path:" << std::endl;
@@ -214,7 +102,7 @@ int main()
 
   {
     // DFS
-    auto path = GraphSearch::DFS<Location, Move>(startLoc, goalFunction, getActions, getResult);
+    auto path = GraphSearch::DFS<Location, Move>(startLoc, goalFunction, getActions, transitionFunction);
 
     if(path) {
       std::cout << "DFS path:" << std::endl;
